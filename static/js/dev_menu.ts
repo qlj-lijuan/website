@@ -20,12 +20,10 @@
 
 import React from "react";
 import ReactDOM from "react-dom";
-import { Page } from "./pv_tree";
+import { Page } from "./gni_page";
 import { updateUrlStatsVar } from "./util.js";
-import { SearchBar} from "./searchbar.tsx";
 
 window.onload = function () {
-  //ReactDOM.render(React.createElement(SearchBar), document.getElementById("search"))
   ReactDOM.render(
     React.createElement(Page, { updateUrl: updateUrlStatsVar, search: false }),
     document.getElementById("main-pane")

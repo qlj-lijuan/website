@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import hierarchy from "../../tools/pv_tree_generator/hierarchy.json";
-import { parseStatVarPath } from "./util";
-import { SearchBar } from "./searchbar.tsx";
 
 interface NodePropType {
   title: string;
@@ -57,15 +55,15 @@ class Node extends Component<NodePropType, NodeStateType> {
       );
     }
 
-    if (this.state.expanded) {
-      expandImg = (
-        <img
-          className="right-caret transform-down"
-          src="../images/right-caret.png"
-          onClick={this._handleExpandClick}
-        />
-      );
-      if (this.props.children) {
+    if (this.props.children.length !== 0) {
+      if (this.state.expanded) {
+        expandImg = (
+          <img
+            className="right-caret transform-down"
+            src="../images/right-caret.png"
+            onClick={this._handleExpandClick}
+          />
+        );
         child = this.props.children.map((item, index) => {
           return (
             <Node
@@ -81,23 +79,17 @@ class Node extends Component<NodePropType, NodeStateType> {
             ></Node>
           );
         });
-      }
-      child = this.props.children.map((item, index) => {
-        return (
-          <Node
-            title={item.title}
-            children={item.children}
-            count={item.count}
-            type={item.type}
-            argString={item.argString}
-            updateUrl={this.props.updateUrl}
-            nodePath={this.state.nodePath}
-            svPaths={this.state.svPaths}
-            key={this.props.title + index}
-          ></Node>
+      } else {
+        expandImg = (
+          <img
+            className="right-caret"
+            src="../images/right-caret.png"
+            onClick={this._handleExpandClick}
+          />
         );
-      });
+      }
     }
+
     return (
       <ul className="unordered-list">
         <li className="child" id={this.props.title}>
@@ -195,46 +187,4 @@ class Menu extends Component<MenuPropType, {}> {
   }
 }
 
-interface PageStateType {
-  statvarPaths: string[][];
-}
-
-class Page extends Component<MenuPropType, PageStateType> {
-  constructor(props) {
-    super(props);
-    this.handleHashChange = this.handleHashChange.bind(this);
-    this.state = {
-      statvarPaths: parseStatVarPath(),
-    };
-  }
-
-  componentDidMount() {
-    window.addEventListener("hashchange", this.handleHashChange);
-  }
-
-  handleHashChange() {
-    this.setState({
-      statvarPaths: parseStatVarPath(),
-    });
-  }
-
-  render() {
-    return (
-      <div>
-        <div id="view">
-          <div id="search">
-            <SearchBar />
-          </div>
-        </div>
-        <div className="explore-menu-container" id="explore">
-          <Menu
-            updateUrl={this.props.updateUrl}
-            search={this.props.search}
-            svPaths={this.state.statvarPaths}
-          ></Menu>
-        </div>
-      </div>
-    );
-  }
-}
-export { Page };
+export { Menu };
